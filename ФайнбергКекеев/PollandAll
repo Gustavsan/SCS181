@@ -1,0 +1,563 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "82a8e1cd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def ext_euclid_algor(a, b):\n",
+    "    # алгоритм Евклида используется для обратного вычисления\n",
+    "    if b == 0:\n",
+    "        return a, 1, 0\n",
+    "    else:\n",
+    "        d, xx, yy = ext_euclid_algor(b, a % b)\n",
+    "        x = yy\n",
+    "        y = xx - (a // b) * yy\n",
+    "        return d, x, y"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "745ff55e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def inverse(a, n):\n",
+    "    #инверсия а по mod n\n",
+    "    return int(ext_euclid_algor(a, n)[1])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "1deaf742",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def step1(x, a, b, tuple):\n",
+    "    #Поллардский шаг\n",
+    "    G, H, P, Q = tuple[0], tuple[1], tuple[2], tuple[3]\n",
+    "\n",
+    "    sub = lift(x) % 3 # Subsets\n",
+    "\n",
+    "    if sub == 0:\n",
+    "        x = x*G % P\n",
+    "        a = (a+1) % Q\n",
+    "\n",
+    "    if sub == 1:\n",
+    "        x = x * H % P\n",
+    "        b = (b + 1) % Q\n",
+    "\n",
+    "    if sub == 2:\n",
+    "        x = x*x % P\n",
+    "        a = a*2 % Q\n",
+    "        b = b*2 % Q\n",
+    "    return x, a, b\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "c440cadd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "\n",
+    "def step2(x, a, b, tuple):\n",
+    "    #Поллардский шаг\n",
+    "    G, H, P, Q = tuple[0], tuple[1], tuple[2], tuple[3]\n",
+    "    \n",
+    "    l = np.random.randint(1, G)\n",
+    "    k = np.random.randint(1, G)\n",
+    "    L = pow(G, l)\n",
+    "    K = pow(H, k)\n",
+    "\n",
+    "    \n",
+    "    sub = lift(x) % 3 # Subsets\n",
+    "\n",
+    "    if sub == 0:\n",
+    "        x = x*L % P\n",
+    "        a = (a+l) % Q\n",
+    "        b=b\n",
+    "\n",
+    "    if sub == 1:\n",
+    "        x = x * K % P\n",
+    "        b = (b + l) % Q\n",
+    "        a = a % Q\n",
+    "        \n",
+    "    if sub == 2:\n",
+    "        x = x*x % P\n",
+    "        a = a*2 % Q\n",
+    "        b = b*2 % Q\n",
+    "    return x, a, b\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "id": "f8b8d0d1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "\n",
+    "def step3(x, a, b, tuple):\n",
+    "    #Поллардский шаг\n",
+    "    G, H, P, Q = tuple[0], tuple[1], tuple[2], tuple[3]\n",
+    "    l = []\n",
+    "    k = []\n",
+    "    i = 0\n",
+    "    while i<20:\n",
+    "        l.append(np.random.randint(1, G))\n",
+    "        k.append(np.random.randint(1, G))\n",
+    "        i+=1\n",
+    "        \n",
+    "    i = 0\n",
+    "    sub = lift(x) % 20 # Subsets\n",
+    "    \n",
+    "    L = pow(G, l[sub]) * pow(H, k[sub])\n",
+    "    x = x*L % P\n",
+    "    a = (a + l[sub]) % Q\n",
+    "    b = (b + k[sub]) % Q \n",
+    "    \n",
+    "    \n",
+    "    return x, a, b\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "id": "3e80b8c3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "def step4(x, a, b, tuple):\n",
+    "    #Поллардский шаг\n",
+    "    G, H, P, Q = tuple[0], tuple[1], tuple[2], tuple[3]\n",
+    "    l = []\n",
+    "    k = []\n",
+    "    i = 0\n",
+    "    while i<20:\n",
+    "        l.append(np.random.randint(1, G))\n",
+    "        k.append(np.random.randint(1, G))\n",
+    "        i+=1\n",
+    "    u1 = -1\n",
+    "    u2 = -1\n",
+    "    u3 = -1\n",
+    "    u4 = -1\n",
+    "    while u1 == u2 or u1 == u3 or u1 == u4 or u2 == u3 or u2 == u4 or u3 == u4: \n",
+    "        u1 = np.random.randint(1, G)\n",
+    "        u2 = np.random.randint(1, G)\n",
+    "        u3 = np.random.randint(1, G)\n",
+    "        u4 = np.random.randint(1, G)\n",
+    "    \n",
+    "    i = 0\n",
+    "    sub = lift(x) % 20 # Subsets\n",
+    "    if sub != u1 or sub != u2 or sub != u3 or sub != u4:\n",
+    "        L = pow(G, l[sub]) * pow(H, k[sub])\n",
+    "        x = x*L % P\n",
+    "        a = (a + l[sub]) % Q\n",
+    "        b = (b + k[sub]) % Q \n",
+    "    else:\n",
+    "        x = x * x\n",
+    "        a = (2 * a) % Q\n",
+    "        b = (2 * b) % Q\n",
+    "        \n",
+    "    \n",
+    "    return x, a, b\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "id": "e623c52d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def pollard1(G, H, P):\n",
+    "    #G-генератор\n",
+    "    #H\n",
+    "    #P-простое число\n",
+    "    opCount = 0\n",
+    "    \n",
+    "    Q = int((P - 1) // 2)  # подгруппа\n",
+    "    x = G*H\n",
+    "    a = 1\n",
+    "    b = 1\n",
+    "\n",
+    "    X = x\n",
+    "    A = a\n",
+    "    B = b\n",
+    "    \n",
+    "    for i in range(1, P):\n",
+    "        #Ёж\n",
+    "        x, a, b = step1(x, a, b, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        #Заяц\n",
+    "        X, A, B = step1(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        X, A, B = step1(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "\n",
+    "        if x == X:\n",
+    "            break\n",
+    "        \n",
+    "    nom = a-A\n",
+    "    denom = B-b\n",
+    "    #Необходимо вычислить обратное значение, чтобы правильно вычислить дробь по модулю q.\n",
+    "    res = (inverse(denom, Q) * nom) % Q\n",
+    "\n",
+    "    if verify(G, H, P, res):\n",
+    "        return res, opCount\n",
+    "\n",
+    "    return res + Q, opCount\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "id": "c38fea8a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def pollard2(G, H, P):\n",
+    "    #G-генератор\n",
+    "    #H\n",
+    "    #P-простое число\n",
+    "    opCount = 0\n",
+    "    \n",
+    "    Q = int((P - 1) // 2)  # подгруппа\n",
+    "    x = G*H\n",
+    "    a = 1\n",
+    "    b = 1\n",
+    "\n",
+    "    X = x\n",
+    "    A = a\n",
+    "    B = b\n",
+    "    \n",
+    "    for i in range(1, P):\n",
+    "        #Ёж\n",
+    "        x, a, b = step2(x, a, b, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        #Заяц\n",
+    "        X, A, B = step2(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        X, A, B = step2(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "\n",
+    "        if x == X:\n",
+    "            break\n",
+    "        \n",
+    "    nom = a-A\n",
+    "    denom = B-b\n",
+    "    #Необходимо вычислить обратное значение, чтобы правильно вычислить дробь по модулю q.\n",
+    "    res = (inverse(denom, Q) * nom) % Q\n",
+    "\n",
+    "    if verify(G, H, P, res):\n",
+    "        return res, opCount\n",
+    "\n",
+    "    return res + Q, opCount\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "id": "b9cc96ca",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def pollard3(G, H, P):\n",
+    "    #G-генератор\n",
+    "    #H\n",
+    "    #P-простое число\n",
+    "    opCount = 0\n",
+    "    \n",
+    "    Q = int((P - 1) // 2)  # подгруппа\n",
+    "    x = G*H\n",
+    "    a = 1\n",
+    "    b = 1\n",
+    "\n",
+    "    X = x\n",
+    "    A = a\n",
+    "    B = b\n",
+    "    \n",
+    "    for i in range(1, P):\n",
+    "        #Ёж\n",
+    "        x, a, b = step3(x, a, b, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        #Заяц\n",
+    "        X, A, B = step3(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        X, A, B = step3(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "\n",
+    "        if x == X:\n",
+    "            break\n",
+    "        \n",
+    "    nom = a-A\n",
+    "    denom = B-b\n",
+    "    #Необходимо вычислить обратное значение, чтобы правильно вычислить дробь по модулю q.\n",
+    "    res = (inverse(denom, Q) * nom) % Q\n",
+    "\n",
+    "    if verify(G, H, P, res):\n",
+    "        return res, opCount\n",
+    "\n",
+    "    return res + Q, opCount\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "id": "69003841",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def pollard4(G, H, P):\n",
+    "    #G-генератор\n",
+    "    #H\n",
+    "    #P-простое число\n",
+    "    opCount = 0\n",
+    "    \n",
+    "    Q = int((P - 1) // 2)  # подгруппа\n",
+    "    x = G*H\n",
+    "    a = 1\n",
+    "    b = 1\n",
+    "\n",
+    "    X = x\n",
+    "    A = a\n",
+    "    B = b\n",
+    "    \n",
+    "    for i in range(1, P):\n",
+    "        #Ёж\n",
+    "        x, a, b = step4(x, a, b, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        #Заяц\n",
+    "        X, A, B = step4(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "        X, A, B = step4(X, A, B, (G, H, P, Q))\n",
+    "        opCount += 1\n",
+    "\n",
+    "        if x == X:\n",
+    "            break\n",
+    "        \n",
+    "    nom = a-A\n",
+    "    denom = B-b\n",
+    "    #Необходимо вычислить обратное значение, чтобы правильно вычислить дробь по модулю q.\n",
+    "    res = (inverse(denom, Q) * nom) % Q\n",
+    "\n",
+    "    if verify(G, H, P, res):\n",
+    "        return res, opCount\n",
+    "\n",
+    "    return res + Q, opCount\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "id": "147caf4c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def verify(g, h, p, x):\n",
+    "    #Проверяет заданный набор g, h, p и x\n",
+    "    return pow(g, int(x), p) == h"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 61,
+   "id": "042e1884",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "5\n",
+      "6\n",
+      "7\n",
+      "8\n",
+      "9\n",
+      "10\n",
+      "11\n",
+      "12\n",
+      "13\n",
+      "14\n",
+      "15\n",
+      "16\n",
+      "17\n",
+      "18\n",
+      "19\n",
+      "[[0.00034689903259277344, 9.822845458984375e-05, 0.00042176246643066406, 0.00011801719665527344, 0.0004608631134033203, 0.0006537437438964844, 0.0010986328125, 0.0004684925079345703, 0.0005865097045898438, 0.00199127197265625, 0.0045621395111083984, 0.006134986877441406, 0.0026373863220214844, 0.003795146942138672, 0.014660358428955078], [0.007293224334716797, 0.0007696151733398438, 0.010759592056274414, 0.03950023651123047, 0.04629397392272949, 0.08526086807250977, 0.01108551025390625, 0.012731313705444336, 0.029937744140625, 0.021947860717773438, 0.5112199783325195, 0.19187498092651367, 2.5103070735931396, 3.786053419113159, 20.3322012424469], [0.04786944389343262, 0.008258819580078125, 0.04816174507141113, 0.0020949840545654297, 0.5705082416534424, 0.323472261428833, 1.9187703132629395, 2.3329644203186035, 0.06703305244445801, 1.5301806926727295, 8.436009407043457, 6.051910400390625, 6.966766119003296, 175.67547011375427, 395.18510007858276], [0.036438941955566406, 0.02779555320739746, 0.14207172393798828, 0.018241167068481445, 0.6303024291992188, 1.1482038497924805, 2.1006581783294678, 0.18091320991516113, 0.03968691825866699, 2.90712833404541, 1.5606694221496582, 21.000721216201782, 39.42337894439697, 23.718202829360962, 508.9484143257141]]\n",
+      "Operations invoked: 1572924\n"
+     ]
+    }
+   ],
+   "source": [
+    "import time\n",
+    "jj=5\n",
+    "sptime = [[],[],[],[]]\n",
+    "spoperation = [[],[],[],[]]\n",
+    "\n",
+    "while jj < 20:\n",
+    "    print(jj)\n",
+    "    M = next_prime(2 ** jj)\n",
+    "    A = Mod(ZZ.random_element(M), M)\n",
+    "    B = A ** ZZ.random_element(M - 1)\n",
+    "\n",
+    "    t1 = time.time()\n",
+    "\n",
+    "    res, opCount = pollard1(A, B, M)\n",
+    "\n",
+    "    t2 = time.time()\n",
+    "    sptime[0].append((t2 - t1))\n",
+    "    spoperation[0].append(opCount)\n",
+    "    t1 = time.time()\n",
+    "\n",
+    "    res, opCount = pollard2(A, B, M)\n",
+    "\n",
+    "    t2 = time.time()\n",
+    "    sptime[1].append((t2 - t1))\n",
+    "    spoperation[1].append(opCount)\n",
+    "    t1 = time.time()\n",
+    "\n",
+    "    res, opCount = pollard3(A, B, M)\n",
+    "\n",
+    "    t2 = time.time()\n",
+    "    sptime[2].append((t2 - t1))\n",
+    "    spoperation[2].append(opCount)\n",
+    "    t1 = time.time()\n",
+    "\n",
+    "    res, opCount = pollard4(A, B, M)\n",
+    "\n",
+    "    t2 = time.time()\n",
+    "    sptime[3].append((t2 - t1))\n",
+    "    spoperation[3].append(opCount)\n",
+    "    jj+=1\n",
+    "    # print(x)\n",
+    "    # print('Time elapsed for 2 in',jj,'=', (t2 - t1))\n",
+    "    # print('Operations invoked:', operationCount)\n",
+    "print(sptime)\n",
+    "print('Operations invoked:', opCount)\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "id": "275c9b92",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[0.00034689903259277344, 9.822845458984375e-05, 0.00042176246643066406, 0.00011801719665527344, 0.0004608631134033203, 0.0006537437438964844, 0.0010986328125, 0.0004684925079345703, 0.0005865097045898438, 0.00199127197265625, 0.0045621395111083984, 0.006134986877441406, 0.0026373863220214844, 0.003795146942138672, 0.014660358428955078], [0.007293224334716797, 0.0007696151733398438, 0.010759592056274414, 0.03950023651123047, 0.04629397392272949, 0.08526086807250977, 0.01108551025390625, 0.012731313705444336, 0.029937744140625, 0.021947860717773438, 0.5112199783325195, 0.19187498092651367, 2.5103070735931396, 3.786053419113159, 20.3322012424469], [0.04786944389343262, 0.008258819580078125, 0.04816174507141113, 0.0020949840545654297, 0.5705082416534424, 0.323472261428833, 1.9187703132629395, 2.3329644203186035, 0.06703305244445801, 1.5301806926727295, 8.436009407043457, 6.051910400390625, 6.966766119003296, 175.67547011375427, 395.18510007858276], [0.036438941955566406, 0.02779555320739746, 0.14207172393798828, 0.018241167068481445, 0.6303024291992188, 1.1482038497924805, 2.1006581783294678, 0.18091320991516113, 0.03968691825866699, 2.90712833404541, 1.5606694221496582, 21.000721216201782, 39.42337894439697, 23.718202829360962, 508.9484143257141]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(sptime)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 63,
+   "id": "c56fbf43",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[24, 15, 84, 12, 42, 123, 207, 87, 108, 384, 882, 1152, 504, 738, 3492], [105, 27, 390, 768, 876, 3090, 168, 459, 1104, 804, 17238, 6432, 82647, 131940, 890046], [108, 24, 132, 3, 1560, 906, 4830, 5643, 192, 4302, 23238, 15606, 19185, 519153, 1348395], [90, 69, 333, 24, 1560, 2877, 4986, 405, 102, 7464, 3816, 49290, 102765, 71676, 1572924]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(spoperation)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 64,
+   "id": "58c3eccd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 73,
+   "id": "7b7cecff",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<matplotlib.legend.Legend object at 0x7fce87788af0>"
+      ]
+     },
+     "execution_count": 73,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAAXcAAAD4CAYAAAAXUaZHAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjUuMiwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8qNh9FAAAACXBIWXMAAAsTAAALEwEAmpwYAAA1GElEQVR4nO3deXTU9bn48fczS3ZACCEJIIuKqGwRk6CyCFKBKldcz5FayuItp1VvrbUWW+uvenvpprd4vbVarlXQWpSrFq1WCeBWFU1Cq8gOaoDczJCESAJkm/nO5/fHLE7INlkmMwnP65w5M/P5bs9kJs985jOfeb5ijEEppVTfYot1AEoppbqfJnellOqDNLkrpVQfpMldKaX6IE3uSinVBzliHQDA4MGDzahRo2IdhlJK9Srbtm2rNMZktLQsLpL7qFGjKC4ujnUYSinVq4jIwdaW6bCMUkr1QZrclVKqD9LkrpRSfVBcjLm3xOPxUFpaSn19faxDUSpqkpKSGD58OE6nM9ahqD4mbpN7aWkp/fr1Y9SoUYhIrMNRqtsZYzh69CilpaWMHj061uGoPiZuh2Xq6+tJT0/XxK76LBEhPT1dP52qqIjb5A5oYld9nr7GVbTEdXJXSqm+rOrpp6l5Y2NU9q3JvQ2lpaUsWLCAMWPGcPbZZ3PHHXfQ2NgY67DixqpVq8jPz+fyyy/nyJEjsQ5HqV7n6FNrOPHWm1HZd0TJXURKRORTEflYRIoDbYNEZJOI7A9cDwxb/8cickBE9orI3KhEHmXGGK677jquueYa9u/fz759+zhx4gT33ntvrEOLG3feeSeFhYW8+eabZGZmxjocpXoV4/XiLS/HkZ0dlf13pOc+yxiTY4zJDdy/B9hijBkDbAncR0QuAG4CxgHzgN+LiL0bY+4Rb775JklJSSxduhQAu93OqlWrePLJJ6mtrWXNmjUsWLCAefPmMXbsWB544AEASkpKGD9+POCfznnWWWdx++23A7BkyRJGjx5NTk4OOTk5fPDBB6xZsya0fO/evTgcDl544QXAX5ahsrISgMrKSoL1d0pKSpg+fTqTJ09m8uTJfPDBB6G43377bQYMGEBOTg5ZWVk89NBDzfYVLi0tLXS7uLiYmTNnAnD//feHtg164YUXWLJkSeixBON84oknEJEW9//d736X3Nxcxo0bx89+9rMmy0aNGsWECRO44IILQn+z+++/n2HDhoX+Ri+88ALGGO6++27Gjx/PhAkTeP7550OPdcaMGVx77bVccMEFfOc738Hn8zV7XNOnT2f+/PnU1dWF9puQkMCECRPIycmhuLiYJUuWMHz4cCzLAuCxxx5DRCgpKWn2mJTqDt6KCrAsnFnRSe5dmQq5AJgZuL0WeBtYEWh/zhjTAHwhIgeAfGBrZw/0wF93squspguhNnfB0P787F/Gtbp8586dXHTRRU3a+vfvz4gRIzhw4AAAhYWF7Nixg5SUFPLy8rjqqqsYPHhwaP3Vq1c3STIADz74IDfccEPo/r59+0K377vvPs4777x2Yx8yZAibNm0iKSmJ/fv3s3DhwlBtHsuyuOyyy3jllVe4//77291XV9XX1/P4448zZMiQFpevXLmSQYMGYVkWs2fPZvv27UycODEU6zvvvENNTQ3z588PbXPnnXfywx/+MHT/xRdf5OOPP+aTTz6hsrKSvLw8ZsyYAfifg127djFy5EjmzZvHSy+91OTv+9prr1FdXc2AAQNITk7m448/BvxvLG+99VaT52vYsGFs3LiRK6+8kpdffplzzjmn2/5OSp3K43ID4Bwa2567AQpEZJuILA+0ZRpjXACB6+B/9zDgcNi2pYG2JkRkuYgUi0hxRUVF56KPImNMizMZwtuvuOIK0tPTSU5O5rrrruO9994LrVdbW8tTTz3Fd7/73YiOt23bNnw+H7m5uU3aZ82aRU5ODrNmzQq1eTwevv3tbzNhwgRuvPFGdu3aFVpWV1dHUlJSi8eYNWsWkyZN4pvf/CZ1dXWh9YO92ZtvvrnJ+qtWrSInJ4epU6fy4YcftrjPRx99lMWLF5OcnNzi8vXr1zN58mQuvPBCdu7cGXGs4d577z0WLlyI3W4nMzOTyy67jKKiIgDy8/M566yzsNvtLFy4sMlzYIxh5cqV/OQnP2n3GACLFi3imWeeYceOHYwZM4bExMSItlOqMzyuMgAcWVlR2X+kPfepxpgyERkCbBKRPW2s29LcrmZn4TbGrAZWA+Tm5rZ5lu62etjRMm7cOF588cUmbTU1NRw+fJizzz6bbdu2NUv+4fcffvhhli9fTkJCQkTH++lPf8pvf/tbfv3rXzdpD/YuKysrQ4l/1apVZGZm8sknn+Dz+ZokyLKyMoYOHdriMd566y3S09P51re+xTPPPMPy5cub9GaLi4ub9JiDPejNmzfzgx/8gB/84AfN/h7r1q3jgw8+4D//8z+bHe+LL77goYceoqioiIEDB7JkyZLQnO76+np8Ph8pKSnt/m3aOol7W8/BunXrmDlzJlkR/vNkZWXh8Xh48MEHueOOO3jrrbci2k6pzvC6gz33lv9fuyqinrsxpixwXQ78Bf8wyxERyQYIXJcHVi8FzgzbfDhQ1l0B95TZs2dTW1vL008/DfiHEO666y6WLFkSSkibNm2iqqqKuro6NmzYwNSpUwGorq5mw4YNLFu2LKJjvfPOO2RnZ3P++edHtH51dTXZ2dnYbDaeeeaZ0DixZVm89NJLoThaIiIMGjSoQ7N+0tPTW1x/1apVfO9732v1DaympobU1FQGDBjAkSNHeP3110PLXnjhBS655JKIjj9jxgyef/55LMuioqKCd999l/z8fMA/LPPFF1/g8/l4/vnnmTZtGgA+n49Vq1bxox/9KOLHCbB06VLKy8uZPHlyh7ZTqqM8ZS5saWnYTxm67S7tJncRSRWRfsHbwBxgB/AKsDiw2mLg5cDtV4CbRCRRREYDY4DC7g482kSEv/zlL/zv//4vY8aM4dxzzyUpKYlf/OIXoXWmTZvGokWLyMnJ4frrrw/1rEtLS7nrrrtwOCL7YLR///4OjY/feuutrF27losvvph9+/aRmpoK+IcVxowZw/XXX9/idvPnz+fSSy9l9+7dLFq0qN3jPProo0ybNo1bbrmFlStXNltujOGb3/xmq9tPmjSJCy+8kHHjxrFs2bLQm85f/vIXHnvsMR5++OEIHi1ce+21TJw4kUmTJnH55Zfzm9/8JtQbv+SSS7jnnnsYP348o0eP5tprrwX8Qz433HADZ5xxRkTHCLrqqquavAkpFS0etxtnlGbKAEhbH3kBROQs/L118A/j/NkYs1JE0oH1wAjgEHCjMaYqsM29wDLAC3zfGNPmf0tubq459WQdu3fvjrgnGwtr1qyhuLiY3/3ud7EO5bT19ttv89BDD/Hqq6/GOpQuiffXuoqOz6+7DkdGBiP+8IdO70NEtoXNYGyi3a6lMeZzYFIL7UeB2a1ssxJo3tVTSikFgLfMRfKEiVHbf9xWhYx3S5YsCc35VrExc+bM0Lx8pXoTX10d1rFjUR2W0fIDSinVw0Jz3LOjMw0SNLkrpVSP87pdAFErPQCa3JVSqsd5XP7krsMySinVh3hcbhDBEcWCe5rc2zFz5kzGjh1LTk4OI0aMCBX56m7r1q1jypQpTJs2rclP9LtCS/IqFZ88rjLsg9OxRfgL9s7Q2TLtMMbw5z//mYsuuig0tz0aFi5cyMKFC7t1n3feeSd33nlnt+5TKdV1XpcbZ3Z0yg4Eac+9HV6vt8VfmrZW8ja85C80LZNbUVHB9ddfT15eHnl5ebz//vtA0/K6W7ZsQURCbyJakldL8qq+x+Ny4YxSwbCg3tFzf/0ecH/avfvMmgBf/1W7qx0/frzViofQfsnbcHfccQd33nkn06ZN49ChQ8ydO5fdu3c3WeeBBx7o1lKzWpJXqfhijMHjdpMW+B+JFu25t6O8vLzNxN1SydvPPvss1AO9++67Q+2bN2/m9ttvJycnh6uvvpqamhqOHz8eWv7iiy+Sl5fHsGFfVUjWkrxf0ZK8qi+wjh3D1NXhiOIcd+gtPfcIetjRcPToUUSk1eJTrZW8Pfvss0M90BdeeCFU+8Tn87F169YWE61lWfzmN7/htddea9Kz1ZK8X9GSvKovCJX61TH32Kivr+fee+9lwYIFra7TXsnbU82ZM6dJobFg0gb405/+1OxMTpHSkrxK9R5fzXHXnntMPPTQQ5w8eZLf//73ra7TXsnbUz3yyCPcdtttTJw4Ea/Xy4wZM3j88ccBOHLkSIdntjz66KNs2LCB2tpafvnLXzYZ4okkvvCSvGeddVazkrxr1qyJKI5rr72WrVu3MmnSJEQkVJJ3z549oZK8n376aejLVehaSd6rrrqqQ9soFU964gdMEEHJ357QG0v+qvb1lZK80aav9dNL+UMPUbX2acZ+8jFi69rgSVslf3VYRimlepDH5caRldXlxN4eHZZRUaMleZVqzuNyRX1IBrTnrpRSPcqf3KP7ZSpocldKqR5jvF685eVRLfUbpMldKaV6iLeiAiwLZ5Ymd6WU6jNCZ2Aaqsk95rTkr1Kqu3hcZQA4olw0DHS2TLu05K9SqruESg8MjW7pAdCee7u05K+W/FWqu3jKXNjS0rCHvf6jpVf03H9d+Gv2VO3p1n2eN+g8VuSvaHc9LfmrJX+V6i4et7tH5riD9tzbpSV/teSvUt3F4yqLeqnfoF7Rc4+khx0NWvJXS/4q1Z28LjfJEyb2yLG0594KLfmrJX+V6k6+ujqsL7/ssWGZXtFzjwUt+aslf5XqTp7QSTp6ZlhGS/6qqNGSv5HR1/rp4eQHH3Bo2S2MeHotqYFPtl3VLSV/RcQuIv8UkVcD9weJyCYR2R+4Hhi27o9F5ICI7BWRuV1/CEop1buFfp0ah7Nl7gDC5+3dA2wxxowBtgTuIyIXADcB44B5wO9FxN494areZObMmdprVyrA43KBCI7MzB45XkTJXUSGA1cBT4Q1LwDWBm6vBa4Ja3/OGNNgjPkCOAB0z2cQpZTqpTxuF/bB6dginIDRVZH23B8GfgT4wtoyjTEugMB1cDL4MOBw2HqlgTallDptectcOLOjX3YgqN3kLiLzgXJjzLYI9ykttDX71lZElotIsYgUV1RURLhrpZTqnTxuN85TftPxbum77K3aG5XjRdJznwpcLSIlwHPA5SLyJ+CIiGQDBK7LA+uXAmeGbT8cKDt1p8aY1caYXGNMbkZGRhceglJKxTdjTLPT6xlj+Pet/87q7aujcsx2k7sx5sfGmOHGmFH4vyh90xjzTeAVYHFgtcXAy4HbrwA3iUiiiIwGxgCF3R55DwgvbuVyuTj77LP561//2qV9btiwgdmzZ5Ofn8/y5cu7GmKfsmLFCvLy8pg/fz4NDQ2xDkepbmMdO4apq2tSeuDw8cMcqT1CflZ0vpLsyo+YfgWsF5FbgEPAjQDGmJ0ish7YBXiB24wxVpcjjaHjx49z5ZVXsmLFCv7lX/6l0/vZvHkzf/zjH/nzn/9MZg99Y96b/PrXv451CEpFRajUb9iY+0fujwDIz45Ocu9Q+QFjzNvGmPmB20eNMbONMWMC11Vh6600xpxtjBlrjHm99T3GP4/Hw3XXXcfVV1/dpKe9bt06JkyYwPjx41mx4qvaNyLCPffcE7o/ZcqUUJne1atXU1dXx+zZs7nwwgtDtVHWrFkTOgnI3r17cTgcoXK9o0aNCpXqraysZNSoURFts2LFCvLz88nPz+fAgQMAHDx4kNmzZzNx4kRmz57NoUOHAH954NGjRzN+/HgmTpzIjh07APif//kf8vLymDRpEtdffz21tbWh9YPHAhg/fjwlJSVtljs+dRvw/wr4/vvvB/zTJoM/ZPvpT3/a5FNTuGuuuYaLLrqIcePGsXp104+zdrudnJwczjnnnFAVy+BjCxZf++CDD6ivr2fp0qVMmDCh2fOwYMEC5s2bx9ixY3nggQcAmjwuj8fDWWedxe23396kQFzw2Dk5OZSVlTFz5swm5RtWrFjRrM6OOn14XC6g6a9Ti1xFZCRnMKr/qKgcs1eUH3D/4hc07O7ekr+J559HVgTVCJctW8Y777zDf//3f4faysrKWLFiBdu2bWPgwIHMmTOHDRs2cM0115Camsq2bduwLIu9e/c2+YeuqKhg1KhRbN68mT179jBnzhz27dvX5Hj33Xcf5513XoceS0vb9O/fn8LCQp5++mm+//3v8+qrr3L77bfzrW99i8WLF/Pkk0/yve99jw0bNgDw4IMPcsMNN3D77bfz5ptvMn78eK677jq+/e1vA/6E+8c//pF/+7d/61BsHVVeXs6WLVtaXf7kk08yaNAg6urqyMvL4/rrryc9PR3LskhNTeXjjz8O/TI2KPjYgoJF1D799NNmz0NhYSE7duwgJSWFvLy8ZvV+Vq9eHXrjCS8Ql5aW1qRWEPjr5+zatYuxY8fyj3/8g9TU1C79bVTv9VVy94+5G2ModBcyJXtK1N70tXBYG06ePElVVRVr1qzhtttuC7UXFRUxc+ZMMjIycDgc3Hzzzbz77ruh5XPnzuWNN97gySefZOnSpaF2YwyLFi0C4LzzzmPkyJFNkvu2bdvw+Xzk5jb9NfGsWbPIyclh1qxZzWJsbZvgWZ0WLlzI1q1bAdi6dSvf+MY3AH/53PDyu3fffTdjxozhlVde4cYbbwRgx44dTJ8+nQkTJvDss8+yc+fOJusHe6qfffZZqL21csfh28yePbvZm1rQz3/+8zZLAD/yyCNMmjSJiy++mMOHD7N//34g8vLE4C9R3NrzcMUVV5Cenk5ycjLXXXddk79RbW0tTz31FN/97ncjOs7SpUt56qmneP3115k3b15E26i+yetygdOJPT0dgM+rP+do/VGmZE+J2jF7Rc89kh52NCQmJrJ+/XpSU1N5+umnefbZZ7n55pvbLHEL/sR56623UlNTw0033cS6desAf2+6LT/96U/57W9/22zsOXjSisrKymZJvLVtwnsDrfUMwtuDvdsnnniCn/3sZ6xevZolS5awYcMGJk2axJo1a3j77bebrQ80GYpprdzxqce4//77m1V2LCkpYceOHU0+JYV7++232bx5M1u3biUlJYWZM2eGShSXlZUxNMJTl3W2RPHDDz/M8uXLI64Cmpuby4svvshnn33GY489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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "plt.plot(sptime[0])\n",
+    "plt.plot(sptime[1])\n",
+    "plt.plot(sptime[2])\n",
+    "plt.plot(sptime[3])\n",
+    "plt.legend(['Оригинальный алгоритм', 'Линейный алгоритм', 'Линейный алгоритм', 'Комбинированный алгоритм'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0502c152",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "SageMath 9.5",
+   "language": "sage",
+   "name": "sagemath"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
